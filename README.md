@@ -17,7 +17,7 @@ Author: **easy bake oven#6781**
 You **must** extract this straight to Mods for this to work. Do not put it in a new folder, do not move or rename mod.lua.
 
 ## Mods
-* The sample mod, 
+* The sample mod, nametag. (procrastinating with linking files even)
 * ...none. Submit some mods to the mod author!
 
 ---
