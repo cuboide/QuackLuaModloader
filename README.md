@@ -2,7 +2,7 @@
 
 Hello! This is a simple page to keep docs, mods, and the source code here!
 
-Most info found [here.](https://desktopgooseunofficial.github.io/ResourceHub/mods/Quack.html)
+Info like downloads, and other things found [here.](https://desktopgooseunofficial.github.io/ResourceHub/mods/Quack.html)
 
 ## Documentation
 
