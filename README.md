@@ -1,24 +1,10 @@
 ![Quack Modloader 🦆](https://i.imgur.com/UoSO3oD.png)
 
-## Features
+Hello! This is a simple page to keep docs, mods, and the source code here!
 
-Ever hankered for a goose modloader in [Lua](https://www.lua.org/)? Well, here you go!
+Most info found [here.](https://desktopgooseunofficial.github.io/ResourceHub/mods/Quack.html)
 
-Get it: [Quack Lua](https://github.com/DesktopGooseUnofficial/ResourceHub/releases/download/quack-0.11/quack.zip)
-
-**⚠ SUPER EARLY ALPHA**. CONTACT MOD AUTHOR IF ISSUES OR SUGGESTIONS/QUESTIONS APPEAR.
-
-Goose Version: **v0.3**
-
-Mod Version: **v0.11**
-
-Author: **easy bake oven#6781**
-
-You **must** extract this straight to Mods for this to work. Do not put it in a new folder, do not move or rename mod.lua.
-
-## Mods
-* The sample mod, nametag. (procrastinating with linking files even)
-* ...none. Submit some mods to the mod author!
+## Documentation
 
 ---
 Functions:
