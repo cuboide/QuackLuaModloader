@@ -4,6 +4,8 @@ Hello! This is a simple page to keep docs, mods, and the source code here!
 
 Info like downloads, and other things found [here.](https://desktopgooseunofficial.github.io/ResourceHub/mods/Quack.html)
 
+todo: please tell me what theme to use for GH pages please please :((((
+
 ## Documentation
 
 ---
