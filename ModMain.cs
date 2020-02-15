@@ -28,88 +28,105 @@ namespace GooseDesktop
         public void PostRender(GooseEntity goose1, Graphics g)
         {
             goose = goose1;
-            if (ModRunning)
-            {
-                try
+            for (int i = 0; i < ModScripts.Length; i++) {
+                if (ModRunning[i])
                 {
-                    UpdateMods(g);
-                }
-                catch (Exception e)
-                {
-                    DialogResult action = MessageBox.Show(null, "Uh oh! a BIG error occured!!!\n" + e.ToString(), "Quack Lua", MessageBoxButtons.AbortRetryIgnore);
-                    if (action == DialogResult.Abort)
+                    try
                     {
-                        Application.Exit();
+                        UpdateMod(g, ModScripts[i], i);
                     }
-                    else if (action == DialogResult.Retry)
+                    catch (Exception e)
                     {
-                        PostRender(goose1, g);
-                    }
-                    else if (action == DialogResult.Ignore)
-                    {
-                        ModRunning = false;
+                        DialogResult action = MessageBox.Show(null, "Uh oh! a BIG error occured!!!\n" + e.ToString(), "Quack Lua", MessageBoxButtons.AbortRetryIgnore);
+                        if (action == DialogResult.Abort)
+                        {
+                            Application.Exit();
+                        }
+                        else if (action == DialogResult.Retry)
+                        {
+                            PostRender(goose1, g);
+                        }
+                        else if (action == DialogResult.Ignore)
+                        {
+                            ModRunning[i] = false;
+                        }
                     }
                 }
             }
         }
 
-        public static string ModContent = "";
-        public static Script ModScript = new Script(CoreModules.Preset_HardSandbox);
-        public static bool ModRunning = false;
-        public void HandleRError(ScriptRuntimeException error)
+        public static int ModLimit = 30;
+        public static Script[] ModScripts = new Script[ModLimit];
+        public static bool[] ModRunning = new bool[ModLimit];
+        public static string[] ModNames = new string[ModLimit];
+        public void HandleRError(ScriptRuntimeException error, int iter)
         {
-            ModRunning = false;
-            MessageBox.Show("Honk! An exception has occured in the loaded mod! \n" + error.DecoratedMessage);
+            ModRunning[iter] = false;
+            MessageBox.Show("Honk! An exception has occured in " + ModNames[iter] + "! \n" + error.DecoratedMessage);
         }
-        public void HandleSError(SyntaxErrorException error)
+        public void HandleSError(SyntaxErrorException error, int iter)
         {
-            ModRunning = false;
-            MessageBox.Show("Honk! A syntax errror has occured in the loaded mod! \n" + error.DecoratedMessage);
+            ModRunning[iter] = false;
+            MessageBox.Show("Honk! A syntax errror has occured in " + ModNames[iter] +"! \n" + error.DecoratedMessage);
         }
         public DynValue StartMods()
         {
-            try { DynValue ModLoadReturn = ModScript.DoString(ModContent); } catch (ScriptRuntimeException exc) { HandleRError(exc); return null; } catch (SyntaxErrorException exc) { HandleSError(exc); return null; }
-            ModScript.Globals["GetGooseProp"] = Lua_GetGooseProp;
-            ModScript.Globals["SetGooseProp"] = Lua_SetGooseProp;
-            ModScript.Globals["DrawRect"] = Lua_DrawRect;
-            ModScript.Globals["DrawText"] = Lua_DrawText;
-            ModScript.Globals["MeasureText"] = Lua_MeasureText;
-            ModScript.Globals["GetMousePos"] = Lua_GetMousePos;
-            ModScript.Globals["GetMouseHeld"] = Lua_GetMouseHeld;
-            ModScript.Globals["MessageBox"] = Lua_MessageBox;
-            ModScript.Globals["MessageBoxAsk"] = Lua_MessageBoxAsk;
-            ModScript.Globals["MessageBoxIcon"] = Lua_MessageBoxIcon;
-            ModScript.Globals["MessageBoxIconAsk"] = Lua_MessageBoxIconAsk;
-            ModScript.Globals["MessageBoxInput"] = Lua_MessageBoxInput;
-            try
+            ModNames = Directory.GetFiles(@"Assets\Mods", "*.lua");
+            for (int i = 0; i < ModNames.Length; i++)
             {
-                DynValue ModStartReturn = ModScript.Call(ModScript.Globals.Get("Start"));
-                return ModStartReturn;
-            }
-            catch (ScriptRuntimeException exc)
-            {
-                HandleRError(exc);
+                ModScripts[i] = new Script(CoreModules.Preset_HardSandbox);
+                try {
+                    try {  ModScripts[i].DoString(File.ReadAllText(ModNames[i])); } catch (IndexOutOfRangeException) {
+                        MessageBox.Show("You madman, you actually reached the mod limit!");
+                        return null;
+                    }
+                } catch (ScriptRuntimeException exc) { HandleRError(exc, i); return null; } catch (SyntaxErrorException exc) { HandleSError(exc, i); return null; }
+                Table graph = new Table(ModScripts[i]);
+
+                graph["SetGooseProp"] = Lua_SetGooseProp;
+                graph["DrawRect"] = Lua_DrawRect;
+                graph["DrawText"] = Lua_DrawText;
+                graph["MeasureText"] = Lua_MeasureText;
+                graph["GetMousePos"] = Lua_GetMousePos;
+                graph["GetMouseHeld"] = Lua_GetMouseHeld;
+                graph["MessageBox"] = Lua_MessageBox;
+                graph["MessageBoxAsk"] = Lua_MessageBoxAsk;
+                graph["MessageBoxIcon"] = Lua_MessageBoxIcon;
+                graph["MessageBoxIconAsk"] = Lua_MessageBoxIconAsk;
+                graph["MessageBoxInput"] = Lua_MessageBoxInput;
+                ModScripts.ElementAt(i).Globals["Graphics"] = graph;
+                try
+                {
+                    DynValue ModStartReturn = ModScripts[i].Call(ModScripts[i].Globals.Get("Start"));
+                    return ModStartReturn;
+                }
+                catch (ScriptRuntimeException exc)
+                {
+                    HandleRError(exc, i);
+                }
             }
             return null;
         }
         public static Graphics g;
-        public DynValue UpdateMods(Graphics g1)
+        public static int maxFPS = 60;
+        public void UpdateMod(Graphics g1, Script script, int iter)
         {
             g = g1;
             //SetLuaValues(goosePosition);
+            System.Threading.Thread.Sleep(50 / maxFPS - 8);
             try
             {
-                if (ModRunning)
+                if (ModRunning.ElementAt(iter))
                 {
-                    try { DynValue ModUpdReturn = ModScript.Call(ModScript.Globals.Get("Update")); return ModUpdReturn; } catch (ArgumentException) { ModRunning = false; return null; }
+                    try {  } catch (ArgumentException) { ModRunning.SetValue(false, iter); }
                     //GetAndSetLuaValues();
                 }
                 else
                 {
-                    return null;
+                    
                 }
             }
-            catch (ScriptRuntimeException exc) { HandleRError(exc); return null; }
+            catch (ScriptRuntimeException exc) { HandleRError(exc, iter); }
         }
         Func<string, object> Lua_GetGooseProp = prop =>
         {
@@ -140,11 +157,11 @@ namespace GooseDesktop
         Func<DynValue, string, string, float, DynValue> Lua_MeasureText = (pos, content, color, size) =>
         {
             SizeF stringsize = g.MeasureString(content, new Font("Arial", size, FontStyle.Bold), int.MaxValue);
-            return DynValue.NewTable(new Table(ModScript, new DynValue[] { DynValue.NewNumber(stringsize.Width), DynValue.NewNumber(stringsize.Height) }));
+            return DynValue.NewTable(new Table(null, new DynValue[] { DynValue.NewNumber(stringsize.Width), DynValue.NewNumber(stringsize.Height) }));
         };
         Func<DynValue> Lua_GetMousePos = () =>
         {
-            return DynValue.NewTable(new Table(ModScript, new DynValue[] { DynValue.NewNumber(Cursor.Position.X), DynValue.NewNumber(Cursor.Position.Y) }));
+            return DynValue.NewTable(new Table(null, new DynValue[] { DynValue.NewNumber(Cursor.Position.X), DynValue.NewNumber(Cursor.Position.Y) }));
         };
         Func<bool> Lua_GetMouseHeld = () =>
         {
@@ -230,6 +247,10 @@ namespace GooseDesktop
                 return "";
             }
         };
+        Func<string, bool> Lua_Print = (prints) =>
+        {   
+            throw new ScriptRuntimeException(new Exception("cannot call \"print\" in script execution"));
+        };
 
         //input box
         public static DialogResult InputBox(string title, string promptText, ref string value)
@@ -249,10 +270,10 @@ namespace GooseDesktop
             buttonOk.DialogResult = DialogResult.OK;
             buttonCancel.DialogResult = DialogResult.Cancel;
 
-            label.SetBounds(9, 20, 372, 13);
-            textBox.SetBounds(12, 56, 372, 20);
-            buttonOk.SetBounds(228, 100, 75, 23);
-            buttonCancel.SetBounds(309, 100, 75, 23);
+            label.SetBounds(9, 15, 372, 23);
+            textBox.SetBounds(12, 76, 372, 20);
+            buttonOk.SetBounds(228, 110, 75, 23);
+            buttonCancel.SetBounds(309, 110, 75, 23);
 
             label.AutoSize = true;
             textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
@@ -264,6 +285,7 @@ namespace GooseDesktop
             form.ClientSize = new Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
             form.FormBorderStyle = FormBorderStyle.FixedDialog;
             form.StartPosition = FormStartPosition.CenterScreen;
+            form.BackColor = Color.White;
             form.MinimizeBox = false;
             form.MaximizeBox = false;
             form.AcceptButton = buttonOk;
@@ -317,14 +339,16 @@ namespace GooseDesktop
         }
         public void Init()
         {
-            if (File.Exists(@"Assets/Mods/mod.lua"))
+            try
             {
-                ModContent = File.ReadAllText(@"Assets/Mods/mod.lua");
                 StartMods();
-                ModRunning = true;
-            } else
+            } catch (Exception e)
             {
-                Lua_MessageBoxIcon("There is no mod.lua in the root folder! This mod is useless without one!\nPut a lua mod in Assets/Mods! (make sure it's named \"mod.lua\")", "Error");
+                MessageBox.Show("A fatal error has occured. The application cannot continue.\n" + e.ToString());
+                Application.Exit();
+            }
+            for (int i = 0; i < ModRunning.Length; i++) {
+                ModRunning[i] = true;
             }
         }
     }

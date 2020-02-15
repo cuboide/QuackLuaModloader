@@ -7,8 +7,8 @@
     <ProjectGuid>{B28CF25D-843C-45B6-AEF1-0A117F1852F5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DefaultMod</RootNamespace>
-    <AssemblyName>DefaultMod</AssemblyName>
+    <RootNamespace>QuackLua</RootNamespace>
+    <AssemblyName>QuackLua</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
