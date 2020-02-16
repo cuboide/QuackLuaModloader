@@ -11,20 +11,21 @@ todo: please tell me what theme to use for GH pages please please :((((
 ---
 Functions:
 
-| Function          | Arguments                                                                       | Purpose                                                                   |
-|-------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------|
-| GetGooseProp      | (string property) returns *something*                                           | Gets the property inside the goose (position, direction, etc)             |
-| SetGooseProp      | (string property, object value)                                                 | Sets the property inside the goose (position, direction, etc)             |
-| DrawRect          | (table position, table size, string[color] color) returns bool                  | Puts a rectangle on screen with the specified position, size, and color.  |
-| DrawText          | (table position, string content, string[color] color, number size) returns bool | Puts text on screen with the specified position, content, color, and size |
-| MeasureText       | Same as above, returns table                                                    | Gets the measurements of the specified text.                              |
-| GetMousePos       | None, returns table                                                             | Gets the mouse's position on the screen.                                  |
-| GetMouseHeld      | None, returns bool                                                              | True if left mouse button is held, otherwise false.                       |
-| MessageBox        | (string message)                                                                | Shows a textbox on the user's screen. Limit of 3 at once.                 |
-| MessageBoxAsk     | (string message) returns bool                                                   | Shows a textbox on the user's screen with yes and no. True if yes.        |
-| MessageBoxIcon    | (string message, string icon)                                                   | Shows a textbox on the user's screen with specified icon. Icons at bottom.|
-| MessageBoxIconAsk | (string message, string icon) returns bool                                      | Same as MessageBoxAsk, but with an icon.                                  |
-| MessageBoxInput   | (string message, string default) returns string                                 | Asks user for text input with message.                                    |
+| Function          | Member of:  |Arguments                                                                       | Purpose                                                                   |
+|-------------------|-------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| GetGooseProp      | Goose            |(string property) returns *something*                                           | Gets the property inside the goose (position, direction, etc)             |
+| SetGooseProp      | Goose            |(string property, object value)                                                 | Sets the property inside the goose (position, direction, etc)             |
+| DrawRect          | Graphics         |(table position, table size, string[color] color) returns bool                  | Puts a rectangle on screen with the specified position, size, and color.  |
+| DrawText          | Graphics         |(table position, string content, string[color] color, number size) returns bool | Puts text on screen with the specified position, content, color, and size |
+| MeasureText       | Graphics         |Same as above, returns table                                                    | Gets the measurements of the specified text.                              |
+| GetMousePos       | Input.Mouse      |None, returns table                                                             | Gets the mouse's position on the screen.                                  |
+| GetMouseHeld      | Input.Mouse      |None, returns bool                                                              | True if left mouse button is held, otherwise false.                       |
+| GetKeyHeld        | Input.Mouse      |(string key) returns bool                                                       | True if the specified key is held, otherwise false                        |
+| MessageBox        | Interface        |(string message)                                                                | Shows a textbox on the user's screen. Limit of 3 at once.                 |
+| MessageBoxAsk     | Interface        |(string message) returns bool                                                   | Shows a textbox on the user's screen with yes and no. True if yes.        |
+| MessageBoxIcon    | Interface        |(string message, string icon)                                                   | Shows a textbox on the user's screen with specified icon. Icons at bottom.|
+| MessageBoxIconAsk | Interface        |(string message, string icon) returns bool                                      | Same as MessageBoxAsk, but with an icon.                                  |
+| MessageBoxInput   | Interface        |(string message, string default) returns string                                 | Asks user for text input with message.                                    |
 
 Some variables accessible to GetGooseProp and SetGooseProp:
 | Variable Name   | Purpose                                                   |
