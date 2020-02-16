@@ -69,18 +69,29 @@ namespace GooseDesktop
         public DynValue StartMods()
         {
             try { DynValue ModLoadReturn = ModScript.DoString(ModContent); } catch (ScriptRuntimeException exc) { HandleRError(exc); return null; } catch (SyntaxErrorException exc) { HandleSError(exc); return null; }
-            ModScript.Globals["GetGooseProp"] = Lua_GetGooseProp;
-            ModScript.Globals["SetGooseProp"] = Lua_SetGooseProp;
-            ModScript.Globals["DrawRect"] = Lua_DrawRect;
-            ModScript.Globals["DrawText"] = Lua_DrawText;
-            ModScript.Globals["MeasureText"] = Lua_MeasureText;
-            ModScript.Globals["GetMousePos"] = Lua_GetMousePos;
-            ModScript.Globals["GetMouseHeld"] = Lua_GetMouseHeld;
-            ModScript.Globals["MessageBox"] = Lua_MessageBox;
-            ModScript.Globals["MessageBoxAsk"] = Lua_MessageBoxAsk;
-            ModScript.Globals["MessageBoxIcon"] = Lua_MessageBoxIcon;
-            ModScript.Globals["MessageBoxIconAsk"] = Lua_MessageBoxIconAsk;
-            ModScript.Globals["MessageBoxInput"] = Lua_MessageBoxInput;
+            Table goosefuncs = new Table(ModScript);
+            Table graphfuncs = new Table(ModScript);
+            Table inputfuncs = new Table(ModScript);
+            Table mousefuncs = new Table(ModScript);
+            Table msgboxfuncs = new Table(ModScript);
+            goosefuncs["GetGooseProp"] = Lua_GetGooseProp;
+            goosefuncs["SetGooseProp"] = Lua_SetGooseProp;
+            graphfuncs["DrawRect"] = Lua_DrawRect;
+            graphfuncs["DrawText"] = Lua_DrawText;
+            graphfuncs["MeasureText"] = Lua_MeasureText;
+            mousefuncs["GetMousePos"] = Lua_GetMousePos;
+            mousefuncs["GetMouseHeld"] = Lua_GetMouseHeld;
+            msgboxfuncs["MessageBox"] = Lua_MessageBox;
+            msgboxfuncs["MessageBoxAsk"] = Lua_MessageBoxAsk;
+            msgboxfuncs["MessageBoxIcon"] = Lua_MessageBoxIcon;
+            msgboxfuncs["MessageBoxIconAsk"] = Lua_MessageBoxIconAsk;
+            msgboxfuncs["MessageBoxInput"] = Lua_MessageBoxInput;
+
+            ModScript.Globals["Graphics"] = graphfuncs;
+            inputfuncs["Mouse"] = mousefuncs;
+            ModScript.Globals["Input"] = inputfuncs;
+            ModScript.Globals["Interface"] = msgboxfuncs;
+
             try
             {
                 DynValue ModStartReturn = ModScript.Call(ModScript.Globals.Get("Start"));
