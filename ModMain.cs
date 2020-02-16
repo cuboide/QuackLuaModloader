@@ -11,6 +11,7 @@ using SamEngine;
 using System.IO;
 using System.Windows.Forms;
 using System.Reflection;
+using System.Windows.Input;
 using MoonSharp.Interpreter;
 using System.Drawing;
 
@@ -73,6 +74,7 @@ namespace GooseDesktop
             Table graphfuncs = new Table(ModScript);
             Table inputfuncs = new Table(ModScript);
             Table mousefuncs = new Table(ModScript);
+            Table keyboardfuncs = new Table(ModScript);
             Table msgboxfuncs = new Table(ModScript);
             goosefuncs["GetGooseProp"] = Lua_GetGooseProp;
             goosefuncs["SetGooseProp"] = Lua_SetGooseProp;
@@ -81,14 +83,17 @@ namespace GooseDesktop
             graphfuncs["MeasureText"] = Lua_MeasureText;
             mousefuncs["GetMousePos"] = Lua_GetMousePos;
             mousefuncs["GetMouseHeld"] = Lua_GetMouseHeld;
+            keyboardfuncs["GetKeyHeld"] = Lua_GetKeyHeld;
             msgboxfuncs["MessageBox"] = Lua_MessageBox;
             msgboxfuncs["MessageBoxAsk"] = Lua_MessageBoxAsk;
             msgboxfuncs["MessageBoxIcon"] = Lua_MessageBoxIcon;
             msgboxfuncs["MessageBoxIconAsk"] = Lua_MessageBoxIconAsk;
             msgboxfuncs["MessageBoxInput"] = Lua_MessageBoxInput;
 
+            ModScript.Globals["Goose"] = goosefuncs;
             ModScript.Globals["Graphics"] = graphfuncs;
             inputfuncs["Mouse"] = mousefuncs;
+            inputfuncs["Keyboard"] = keyboardfuncs;
             ModScript.Globals["Input"] = inputfuncs;
             ModScript.Globals["Interface"] = msgboxfuncs;
 
@@ -155,11 +160,15 @@ namespace GooseDesktop
         };
         Func<DynValue> Lua_GetMousePos = () =>
         {
-            return DynValue.NewTable(new Table(ModScript, new DynValue[] { DynValue.NewNumber(Cursor.Position.X), DynValue.NewNumber(Cursor.Position.Y) }));
+            return DynValue.NewTable(new Table(ModScript, new DynValue[] { DynValue.NewNumber(Input.mouseX), DynValue.NewNumber(Input.mouseY) }));
         };
         Func<bool> Lua_GetMouseHeld = () =>
         {
             return (Control.MouseButtons == MouseButtons.Left);
+        };
+        Func<string, bool> Lua_GetKeyHeld = (prop) =>
+        {
+            return Keyboard.IsKeyDown((Key)Enum.Parse(typeof(Key), prop));
         };
         Func<string, string, bool> Lua_MessageBoxIcon = (content, icon) =>
         {
