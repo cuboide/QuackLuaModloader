@@ -23,7 +23,7 @@ The `GetGooseProp` function is a member of `Goose`, therefore you'll have to typ
 | MeasureText       | Graphics         |Same as above, returns table                                                    | Gets the measurements of the specified text.                              |
 | GetMousePos       | Input.Mouse      |None, returns table                                                             | Gets the mouse's position on the screen.                                  |
 | GetMouseHeld      | Input.Mouse      |None, returns bool                                                              | True if left mouse button is held, otherwise false.                       |
-| GetKeyHeld        | Input.Mouse      |(string key) returns bool                                                       | True if the specified key is held, otherwise false                        |
+| GetKeyHeld        | Input.Keyboard   |(string key) returns bool                                                       | True if the specified key is held, otherwise false                        |
 | MessageBox        | Interface        |(string message)                                                                | Shows a textbox on the user's screen. Limit of 3 at once.                 |
 | MessageBoxAsk     | Interface        |(string message) returns bool                                                   | Shows a textbox on the user's screen with yes and no. True if yes.        |
 | MessageBoxIcon    | Interface        |(string message, string icon)                                                   | Shows a textbox on the user's screen with specified icon. Icons at bottom.|
