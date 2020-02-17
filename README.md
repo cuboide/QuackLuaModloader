@@ -14,7 +14,7 @@ Functions:
 *Example of "Member of":* Because the parent for GetGooseProp is "Goose", you'll have to type "Goose.GetGooseProp("property")" to call it.
 
 | Function          | Member of:  |Arguments                                                                       | Purpose                                                                   |
-|-------------------|-------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+|-------------------|------------------|--------------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | GetGooseProp      | Goose            |(string property) returns *something*                                           | Gets the property inside the goose (position, direction, etc)             |
 | SetGooseProp      | Goose            |(string property, object value)                                                 | Sets the property inside the goose (position, direction, etc)             |
 | DrawRect          | Graphics         |(table position, table size, string[color] color) returns bool                  | Puts a rectangle on screen with the specified position, size, and color.  |
