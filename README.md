@@ -11,7 +11,8 @@ todo: please tell me what theme to use for GH pages please please :((((
 ---
 Functions:
 
-*Example of "Member of":* Because the parent for GetGooseProp is "Goose", you'll have to type "Goose.GetGooseProp("property")" to call it.
+**What does "Member of" mean?** 
+The `GetGooseProp` function is a member of `Goose`, therefore you'll have to type `Goose.GetGooseProp("property")` to call the function.
 
 | Function          | Member of:       |Arguments                                                                       | Purpose                                                                   |
 |-------------------|------------------|--------------------------------------------------------------------------------|---------------------------------------------------------------------------|
