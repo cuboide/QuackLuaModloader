@@ -23,9 +23,34 @@ namespace GooseDesktop
         {
             // Subscribe to whatever events we want
             InjectionPoints.PostRenderEvent += PostRender;
+            InjectionPoints.PreRenderEvent += PreRender;
             Init();
         }
         public static GooseEntity goose;
+        public void PreRender(GooseEntity goose1, Graphics g)
+        {
+            goose = goose1;
+            if (!UserData.IsTypeRegistered<GooseEntity>())
+            {
+                g.DrawString("Loading Quack...", new Font("Arial", 12), new SolidBrush(Color.Cyan), new PointF(10f, 10f));
+                UserData.RegisterType<Vector2>();
+                UserData.RegisterType<Pen>();
+                UserData.RegisterType<Bitmap>();
+                UserData.RegisterType<TextureBrush>();
+                UserData.RegisterType<SolidBrush>();
+                UserData.RegisterType<Font>();
+                UserData.RegisterType<PointF>();
+                UserData.RegisterType<Graphics>();
+                UserData.RegisterType<Rig>();
+                UserData.RegisterType<FootMark>();
+                UserData.RegisterType<ProceduralFeets>();
+                UserData.RegisterType<GooseTaskInfo>();
+                UserData.RegisterType<GooseRenderData>();
+                UserData.RegisterType<GooseEntity.ParametersTable>();
+                UserData.RegisterType<GooseEntity>();
+                ModScript.Globals.Set("GooseEntity", UserData.Create(goose));
+            }
+        }
         public void PostRender(GooseEntity goose1, Graphics g)
         {
             goose = goose1;
@@ -37,7 +62,7 @@ namespace GooseDesktop
                 }
                 catch (Exception e)
                 {
-                    DialogResult action = MessageBox.Show(null, "Uh oh! a BIG error occured!!!\n" + e.ToString(), "Quack Lua", MessageBoxButtons.AbortRetryIgnore);
+                    DialogResult action = MessageBox.Show(null, "An internal exception has occured during mod execution.\n Please contact the mod author with a screenshot of this window.\n" + e.ToString(), "Quack Lua", MessageBoxButtons.AbortRetryIgnore);
                     if (action == DialogResult.Abort)
                     {
                         Application.Exit();
@@ -340,7 +365,7 @@ namespace GooseDesktop
             if (File.Exists(@"Assets/Mods/mod.lua"))
             {
                 ModContent = File.ReadAllText(@"Assets/Mods/mod.lua");
-                StartMods();
+                try { StartMods(); } catch (Exception e) { MessageBox.Show("An internal exception has occured during mod initialization.\n Please contact the mod author with a screenshot of this window.\n" + e.ToString()); }
                 ModRunning = true;
             } else
             {
